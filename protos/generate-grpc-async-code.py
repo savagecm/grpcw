@@ -157,10 +157,10 @@ if __name__ == '__main__':
     single_replace["%generated_protobuf_header%"] = generated_protobuf_header
     single_replace["%grpc_async_header%"] = os.path.basename(output_header)
 
-    header_file = open(output_header, "w")
+    header_file = open(output_header, "w+")
     generate_file(header_file, hpp_template)
     header_file.close()
 
-    source_file = open(output_source, "w")
+    source_file = open(output_source, "w+")
     generate_file(source_file, src_template)
     source_file.close()
