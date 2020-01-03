@@ -1,7 +1,7 @@
 #pragma once
 #include "%generated_protobuf_header%"
 #include "%generated_grpc_header%"
-#include "grpc/util.hpp"
+#include <grpcpp/grpcpp.h>
 %namespaces%
 class %service%Server final
 {
@@ -12,28 +12,18 @@ class %service%Server final
         cq_->Shutdown();
         ServerThread_.join();
     }
-    void Run(std::string host, uint16_t port)
-    {
-        std::string server_address = host + ":" + std::to_string(port);
-        ::grpc::ServerBuilder builder;
-        builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
-        builder.RegisterService(&service_);
-        cq_ = builder.AddCompletionQueue();
-        server_ = builder.BuildAndStart();
-        std::cout << "Server listening on " << server_address << std::endl;
-        %repeat_start%
-        new %function_name%CallData(&service_, cq_.get());
-        %repeat_end%
-        ServerThread_ = std::thread([this](){
-            HandleRpcs();            
-        });   
-    }
     struct CallData{
         virtual ~CallData(){};
         virtual void Proceed() = 0;
     };
+    void Run(std::string host, uint16_t port);
+
+
     %repeat_start%
-    using %function_name%_cb = std::function<std::future<%return_type%>(%function_argument_type% const &)>;
+    using %function_name%_cb = std::function<%return_type%(%function_argument_type% const &)>;
+    //typedef %return_type% (*%function_name%_cb)(%function_argument_type% const &);
+
+
     static void register_rpc_%function_name%(%function_name%_cb user_callback_fn)
     {  
         _%function_name%_cb = user_callback_fn;
@@ -57,9 +47,8 @@ class %service%Server final
             else if (status_ == PROCESS)
             {
                 new %function_name%CallData(service_, cq_);
-                auto reply_futher = _%function_name%_cb(request_);
                 status_ = FINISH;
-                responder_.Finish(reply_futher.get(), ::grpc::Status::OK, this);
+                responder_.Finish(_%function_name%_cb(request_), ::grpc::Status::OK, this);
             }
             else
             {

@@ -7,7 +7,7 @@ gen_path="${PROJECT_SOURCE_DIR}"
 
 
 
-for PROTOS in `ls ${PROTOS_PATH}| grep proto`
+for PROTOS in `find ${PROTOS_PATH} -name *.proto`
 do
     echo "process file : ${PROTOS}"
     protoc  --cpp_out "${PROTOS_PATH}" --proto_path "${PROTOS_PATH}" ${PROTOS}

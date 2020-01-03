@@ -32,5 +32,9 @@
 *.app
 build/
 lib/
-src/gen_target
-include/gen_target
+src/gen_target/*.cc
+include/gen_target/*.h
+include/grpc/*.hpp
+!include/grpc/wrapper.hpp
+src/grpc/*.cpp
+!src/grpc/wrapper.cpp

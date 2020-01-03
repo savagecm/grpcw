@@ -95,19 +95,6 @@ if __name__ == '__main__':
     if len(input_file) == 0 or len(output_header) == 0 or len(output_source) == 0 or len(source_template) == 0 or len(source_template) == 0 or len(generated_protobuf_header) == 0:
         print("Usage: generate-grpc-async-client.py -i <.proto file> -ph <generated protobufheader file> -oh <output cpp header file> -os <output cpp source file> -ht <cpp header template> -st <cpp source template>")
         sys.exit(1)
-
-    hpp_template_file = open(header_template, "r")
-    hpp_template = []
-    for line in hpp_template_file:
-        hpp_template.append(line)
-    hpp_template_file.close()
-
-    src_template_file = open(source_template, "r")
-    src_template = []
-    for line in src_template_file:
-        src_template.append(line)
-    src_template_file.close()
-
     single_replace["%namespaces%"] = ""
     single_replace["%namespaces_end%"] = ""
 
@@ -152,6 +139,26 @@ if __name__ == '__main__':
             rpc["%return_type%"] = return_type
             rpcs.append(rpc)
     proto_file.close()
+
+    if not single_replace.has_key("%service%"):
+        print(" file " + input_file + " do not have service, return")
+        sys.exit()
+
+    hpp_template_file = open(header_template, "r")
+    hpp_template = []
+    for line in hpp_template_file:
+        hpp_template.append(line)
+    hpp_template_file.close()
+
+    src_template_file = open(source_template, "r")
+    src_template = []
+    for line in src_template_file:
+        src_template.append(line)
+    src_template_file.close()
+
+
+
+
 
     single_replace["%generated_grpc_header%"] = generated_grpc_header
     single_replace["%generated_protobuf_header%"] = generated_protobuf_header

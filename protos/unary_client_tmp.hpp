@@ -2,7 +2,7 @@
 #include "%generated_protobuf_header%"
 #include "%generated_grpc_header%" 
 
-#include "util.hpp"
+#include <grpcpp/grpcpp.h>
 
 %namespaces%
 class %service%Client

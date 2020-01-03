@@ -27,7 +27,9 @@ if __name__ == '__main__':
         sys.exit(1)
     protos = map(
         lambda protoName: protoName.split('.')[0],
-        filter(lambda fname: "proto" in fname and "Types" not in fname, os.listdir(proto_path)))
+        #filter(lambda fname: "proto" in fname and "Types" not in fname, os.listdir(proto_path)))
+        filter(lambda fname: "proto" in fname, os.listdir(proto_path)))
+
     print('now start to process')
     for file in protos:
         print('process service : ' + file)
