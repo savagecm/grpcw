@@ -3,7 +3,7 @@
 work_path=$(dirname $(readlink -f $0))
 echo 'base working dir is :' $work_path
 cd $work_path
-sudo apt-get install autoconf automake libtool curl make g++ unzip 
+sudo apt-get install -y autoconf automake libtool curl make g++ unzip 
 sudo apt install -y autoconf libtool cmake
 
 git clone https://github.com/google/protobuf.git 
