@@ -92,8 +92,9 @@ if __name__ == '__main__':
         if arg == "-st":
             source_template = sys.argv[i+1]
 
-    if len(input_file) == 0 or len(output_header) == 0 or len(output_source) == 0 or len(source_template) == 0 or len(source_template) == 0 or len(generated_protobuf_header) == 0:
+    if len(input_file) == 0 or len(output_header) == 0 or len(output_source) == 0 or len(header_template) == 0 or len(source_template) == 0 or len(generated_protobuf_header) == 0:
         print("Usage: generate-grpc-async-client.py -i <.proto file> -ph <generated protobufheader file> -oh <output cpp header file> -os <output cpp source file> -ht <cpp header template> -st <cpp source template>")
+        print("input_file is "+input_file+", output_header is "+output_header+", output_source is "+output_source+", header_template is "+header_template+", source_template is "+source_template+", generated_protobuf_header"+ generated_protobuf_header)
         sys.exit(1)
     single_replace["%namespaces%"] = ""
     single_replace["%namespaces_end%"] = ""
