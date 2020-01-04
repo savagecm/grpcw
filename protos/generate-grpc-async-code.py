@@ -15,12 +15,14 @@ service = ""
 rpcs = []
 single_replace = {}
 
+
 def replace(lines, replace_args):
     new_lines = lines
-    for key, value in replace_args.iteritems():
+    for key, value in replace_args.items():
         if re.search("^%.+%$", key):
             new_lines = re.sub(key, value, new_lines)
     return new_lines
+
 
 def generate_file(file_handler, template):
     line_buffer = ""
@@ -48,13 +50,21 @@ def generate_file(file_handler, template):
             lines = ""
             for rpc in rpcs:
                 #            rpc = {"%function_name%": "", "%function_argument_type%": "", "streamed_function_argument_type": False, "%return_type%": "", "streamed_return_type": False}
-                if repeat and not rpc["streamed_function_argument_type"] and not rpc["streamed_return_type"]:
+                if repeat and not rpc[
+                        "streamed_function_argument_type"] and not rpc[
+                            "streamed_return_type"]:
                     replace_args = rpc
-                elif stream_req_repeat and rpc["streamed_function_argument_type"] and not rpc["streamed_return_type"]:
+                elif stream_req_repeat and rpc[
+                        "streamed_function_argument_type"] and not rpc[
+                            "streamed_return_type"]:
                     replace_args = rpc
-                elif stream_resp_repeat and not rpc["streamed_function_argument_type"] and rpc["streamed_return_type"]:
+                elif stream_resp_repeat and not rpc[
+                        "streamed_function_argument_type"] and rpc[
+                            "streamed_return_type"]:
                     replace_args = rpc
-                elif stream_req_resp_repeat and rpc["streamed_function_argument_type"] and rpc["streamed_return_type"]:
+                elif stream_req_resp_repeat and rpc[
+                        "streamed_function_argument_type"] and rpc[
+                            "streamed_return_type"]:
                     replace_args = rpc
                 else:
                     continue
@@ -74,27 +84,36 @@ def generate_file(file_handler, template):
             lines = replace(line, single_replace)
             file_handler.write(lines)
 
+
 if __name__ == '__main__':
     for i in range(1, len(sys.argv)):
         arg = sys.argv[i]
         if arg == "-i":
-            input_file = sys.argv[i+1]
+            input_file = sys.argv[i + 1]
         if arg == "-ph":
-            generated_protobuf_header = sys.argv[i+1]
+            generated_protobuf_header = sys.argv[i + 1]
         if arg == "-gh":
-            generated_grpc_header = sys.argv[i+1]
+            generated_grpc_header = sys.argv[i + 1]
         if arg == "-oh":
-            output_header = sys.argv[i+1]
+            output_header = sys.argv[i + 1]
         if arg == "-os":
-            output_source = sys.argv[i+1]
+            output_source = sys.argv[i + 1]
         if arg == "-ht":
-            header_template = sys.argv[i+1]
+            header_template = sys.argv[i + 1]
         if arg == "-st":
-            source_template = sys.argv[i+1]
+            source_template = sys.argv[i + 1]
 
-    if len(input_file) == 0 or len(output_header) == 0 or len(output_source) == 0 or len(header_template) == 0 or len(source_template) == 0 or len(generated_protobuf_header) == 0:
-        print("Usage: generate-grpc-async-client.py -i <.proto file> -ph <generated protobufheader file> -oh <output cpp header file> -os <output cpp source file> -ht <cpp header template> -st <cpp source template>")
-        print("input_file is "+input_file+", output_header is "+output_header+", output_source is "+output_source+", header_template is "+header_template+", source_template is "+source_template+", generated_protobuf_header"+ generated_protobuf_header)
+    if len(input_file) == 0 or len(output_header) == 0 or len(
+            output_source) == 0 or len(header_template) == 0 or len(
+                source_template) == 0 or len(generated_protobuf_header) == 0:
+        print(
+            "Usage: generate-grpc-async-client.py -i <.proto file> -ph <generated protobufheader file> -oh <output cpp header file> -os <output cpp source file> -ht <cpp header template> -st <cpp source template>"
+        )
+        print("input_file is " + input_file + ", output_header is " +
+              output_header + ", output_source is " + output_source +
+              ", header_template is " + header_template +
+              ", source_template is " + source_template +
+              ", generated_protobuf_header" + generated_protobuf_header)
         sys.exit(1)
     single_replace["%namespaces%"] = ""
     single_replace["%namespaces_end%"] = ""
@@ -114,8 +133,13 @@ if __name__ == '__main__':
                     namespace + " { "
                 single_replace["%namespaces_end%"] += "} "
         if (line[:4] == "rpc "):
-            rpc = {"%function_name%": "", "%function_argument_type%": "",
-                   "streamed_function_argument_type": False, "%return_type%": "", "streamed_return_type": False}
+            rpc = {
+                "%function_name%": "",
+                "%function_argument_type%": "",
+                "streamed_function_argument_type": False,
+                "%return_type%": "",
+                "streamed_return_type": False
+            }
             m = re.search("rpc +(.+)\((.+)\) +returns +\((.+)\)", line)
             function_name = m.group(1).strip()
             function_argument_type = m.group(2).strip()
@@ -131,7 +155,7 @@ if __name__ == '__main__':
             m = re.search("(.+) +(.+)", return_type)
             if m:
                 if m.group(1).strip() != "stream":
-                    print "Something went wrong: " + line
+                    print("Something went wrong: " + line)
                     sys.exit(1)
                 return_type = m.group(2).strip()
                 rpc["streamed_return_type"] = True
@@ -141,7 +165,7 @@ if __name__ == '__main__':
             rpcs.append(rpc)
     proto_file.close()
 
-    if not single_replace.has_key("%service%"):
+    if "%service%" not in single_replace:
         print(" file " + input_file + " do not have service, return")
         sys.exit()
 
@@ -156,10 +180,6 @@ if __name__ == '__main__':
     for line in src_template_file:
         src_template.append(line)
     src_template_file.close()
-
-
-
-
 
     single_replace["%generated_grpc_header%"] = generated_grpc_header
     single_replace["%generated_protobuf_header%"] = generated_protobuf_header

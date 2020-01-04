@@ -2,6 +2,8 @@
 #include "%generated_protobuf_header%"
 #include "%generated_grpc_header%"
 #include <grpcpp/grpcpp.h>
+#include "logger/logger.hpp"
+#include <thread>
 %namespaces%
 class %service%Server final
 {

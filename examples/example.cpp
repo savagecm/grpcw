@@ -25,19 +25,13 @@
  */
 
 #include <iostream>
-#include "include"
-
-
 
 #include <grpc++/grpc++.h>
 #include "gen_target/greeter.pb.h"
 #include "gen_target/greeter.grpc.pb.h"
 
-
 #include "grpc/greeterClient.hpp"
 #include "grpc/greeterServer.hpp"
-#include "grpc/util.hpp"
-
 
 using namespace helloworld;
 int main(int argc, char **argv)
@@ -46,15 +40,14 @@ int main(int argc, char **argv)
   {
     __LOG(debug, "now start server");
     GreeterServer server;
-    server.register_rpc_SayHello([](HelloRequest const &request) -> std::future<HelloReply> {
+    server.register_rpc_SayHello([](HelloRequest const &request) -> HelloReply {
       __LOG(debug, "[server][hello] receive request with name : " << request.name());
-      std::promise<HelloReply> _promise;
+
       std::string _reply_str = "HelloAgain " + request.name();
       HelloReply _relpy;
       _relpy.set_message(_reply_str);
-      auto future = _promise.get_future();
-      _promise.set_value(_relpy);
-      return future;
+
+      return _relpy;
     });
     server.Run("127.0.0.1", 2222);
 

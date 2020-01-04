@@ -3,7 +3,7 @@
 #include "%generated_grpc_header%" 
 
 #include <grpcpp/grpcpp.h>
-
+#include "logger/logger.hpp"
 %namespaces%
 class %service%Client
 {
