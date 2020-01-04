@@ -37,7 +37,6 @@ std::unique_ptr<logger_iface> active_logger(new logger(logger_iface::log_level::
 logger::logger(logger_iface::log_level level)
     : m_level(level)
 {
-
 }
 void logger::set_log_level(logger_iface::log_level level)
 {
@@ -45,7 +44,7 @@ void logger::set_log_level(logger_iface::log_level level)
 }
 void logger::debug(const std::string &msg, const std::string &file, std::size_t line)
 {
-  
+
     if (m_level >= logger_iface::log_level::debug)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -55,7 +54,7 @@ void logger::debug(const std::string &msg, const std::string &file, std::size_t 
 
 void logger::info(const std::string &msg, const std::string &file, std::size_t line)
 {
-   
+
     if (m_level >= logger_iface::log_level::info)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -75,7 +74,7 @@ void logger::warn(const std::string &msg, const std::string &file, std::size_t l
 
 void logger::error(const std::string &msg, const std::string &file, std::size_t line)
 {
-  
+
     if (m_level >= logger_iface::log_level::error)
     {
         std::lock_guard<std::mutex> lock(m_mutex);
@@ -112,5 +111,3 @@ void set_log_level(logger_iface::log_level level)
     if (active_logger)
         active_logger->set_log_level(level);
 }
-
-
