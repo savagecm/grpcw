@@ -184,6 +184,40 @@ if __name__ == '__main__':
     single_replace["%generated_grpc_header%"] = generated_grpc_header
     single_replace["%generated_protobuf_header%"] = generated_protobuf_header
     single_replace["%grpc_async_header%"] = os.path.basename(output_header)
+    oh_base_hdr = os.path.basename(output_header)
+    oname = oh_base_hdr.split('.')[0]
+    single_replace["%grpc_async_wrapper_header%"] = oname + 'Wrapper.hpp'
+
+    output_header_wrapper_file = os.path.dirname(
+        output_header) + '/' + oname + 'Wrapper.hpp'
+    output_source_wrapper_file = os.path.dirname(
+        output_source) + '/' + oname + 'Wrapper.cpp'
+    # mow open wrapper tem file
+    wrapper_header_template = os.path.dirname(
+        header_template) + '/' + "wrapper_" + os.path.basename(header_template)
+
+    hpp_wrapper_template_file = open(wrapper_header_template, "r")
+    hpp_wrapper_template = []
+    for line in hpp_wrapper_template_file:
+        hpp_wrapper_template.append(line)
+    hpp_wrapper_template_file.close()
+
+    wrapper_src_template = os.path.dirname(
+        source_template) + '/' + "wrapper_" + os.path.basename(source_template)
+
+    src_wrapper_template_file = open(wrapper_src_template, "r")
+    src_wrapper_template = []
+    for line in src_wrapper_template_file:
+        src_wrapper_template.append(line)
+    src_wrapper_template_file.close()
+
+    wrapper_header_file = open(output_header_wrapper_file, "w+")
+    generate_file(wrapper_header_file, hpp_wrapper_template)
+    wrapper_header_file.close()
+
+    wrapper_source_file = open(output_source_wrapper_file, "w+")
+    generate_file(wrapper_source_file, src_wrapper_template)
+    wrapper_source_file.close()
 
     header_file = open(output_header, "w+")
     generate_file(header_file, hpp_template)
