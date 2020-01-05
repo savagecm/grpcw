@@ -15,7 +15,6 @@ service = ""
 rpcs = []
 single_replace = {}
 
-
 def replace(lines, replace_args):
     new_lines = lines
     for key, value in replace_args.items():

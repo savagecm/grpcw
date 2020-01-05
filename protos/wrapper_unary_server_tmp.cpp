@@ -35,8 +35,6 @@ void %service%ServerWrapper::Run(char* host, uint16_t port)
     }    
 }
 
-
- 
 %repeat_start%
 void %service%ServerWrapper::register_rpc_%function_name%(%function_name%_cb user_callback_fn)
 {

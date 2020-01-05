@@ -2,14 +2,13 @@
 #include "%generated_grpc_header%" 
 #include "grpc/%grpc_async_header%"
 #include "grpc/%grpc_async_wrapper_header%"
+#include "logger/logger.hpp"
 
 #include <grpcpp/grpcpp.h>
 #include <memory>
 
-#include "logger/logger.hpp"
 %namespaces%
 std::unique_ptr<%service%Client> %service%ClientWrapper_uptr;
-
 
 %service%ClientWrapper::~%service%ClientWrapper()
 {
@@ -18,8 +17,6 @@ std::unique_ptr<%service%Client> %service%ClientWrapper_uptr;
         %service%ClientWrapper_uptr.reset(nullptr);
     }
 }
-
-
 
 void %service%ClientWrapper::init(char* ipPort, int secureType)
 {
@@ -33,8 +30,6 @@ void %service%ClientWrapper::init(char* ipPort, int secureType)
 
 }
 
-
- 
 %repeat_start%
 void %service%ClientWrapper::%function_name%(%function_argument_type% const & request, void(*cb)(%return_type%))
 {
@@ -48,4 +43,5 @@ void %service%ClientWrapper::%function_name%(%function_argument_type% const & re
     }       
 }
 %repeat_end%
+
 %namespaces_end%

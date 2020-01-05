@@ -1,11 +1,6 @@
 #pragma once
 #include "%generated_protobuf_header%"
 
-
-
-
-
-
 %namespaces%
 
 class %service%ServerWrapper
