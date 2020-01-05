@@ -23,7 +23,7 @@ class %service%Server final
 
     %repeat_start%
     using %function_name%_cb = std::function<%return_type%(%function_argument_type% const &)>;
-    //typedef %return_type% (*%function_name%_cb)(%function_argument_type% const &);
+    //typedef %return_type% (*%function_name%_cb)(%function_argument_type% const &)
 
 
     static void register_rpc_%function_name%(%function_name%_cb user_callback_fn)

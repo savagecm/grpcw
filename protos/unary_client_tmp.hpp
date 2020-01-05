@@ -81,7 +81,7 @@ class %service%Client
                         }
                         else
                         {
-                            __LOG(debug, "receive message timeout");
+                            __LOG(debug, "receive message timeout, status is : " + tmp_status);
                         }
                     }
                 }   

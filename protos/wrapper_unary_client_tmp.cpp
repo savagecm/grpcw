@@ -21,11 +21,11 @@ std::unique_ptr<%service%Client> %service%ClientWrapper_uptr;
 
 
 
-void %service%ClientWrapper::init(std::string ipPort, int secureType)
+void %service%ClientWrapper::init(char* ipPort, int secureType)
 {
-
+    std::string ipPortString(ipPort);
     if(secureType == 0){
-        std::unique_ptr<%service%Client> used_client_uptr(new %service%Client(grpc::CreateChannel(ipPort, grpc::InsecureChannelCredentials())));
+        std::unique_ptr<%service%Client> used_client_uptr(new %service%Client(grpc::CreateChannel(ipPortString, grpc::InsecureChannelCredentials())));
         %service%ClientWrapper_uptr = std::move(used_client_uptr);
         %service%ClientWrapper_uptr->init();
     }
