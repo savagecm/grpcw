@@ -40,3 +40,4 @@ src/grpc/**/*.cpp
 !src/grpc/wrapper.cpp
 protos/gen/*
 !protos/gen/README.md
+.vscode/
