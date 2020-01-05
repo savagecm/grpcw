@@ -1,25 +1,22 @@
 # grpc cpp wrapper
 
-# build status    
-## master branch [![Build Status](https://travis-ci.org/maxcong001/grpc-cpp-wrapper.svg?branch=master)](https://travis-ci.org/maxcong001/grpc-cpp-wrapper)
-      
-## dev branch [![Build Status](https://travis-ci.org/maxcong001/grpc-cpp-wrapper.svg?branch=dev)](https://travis-ci.org/maxcong001/grpc-cpp-wrapper)
 
 
 
-## this project provide a wrapper of grpc for c++    
+## this project provide a wrapper of grpc for both c++98 and c++11 user    
 the goal is to forget the grpc/protobuf detail infomation.
 just need to provide the IDL file and then register service, do not need to care about the grpc.
 
 ## dependancy    
 1. protobuf
 2. grpc
-3. C++11
+3. C++11(optional)
 
 ## How to use    
 
-1. just need to put your proto file under protos/ and change name to : grpc_wrapper.proto
-2. mkdir build&&cd build&&cmake ..&&make
+1. just need to put your proto file under protos/ 
+2. ./autogen.sh
+3. mkdir build&&cd build&&cmake ..&&make
 
 ### how to use server    
 just need three steps:
@@ -31,7 +28,7 @@ GreeterServer server;
 ```
 server.register_rpc_SayHello(your function);
 ```
-function arg is your request type and return std::future<your return type>    
+function arg is your request type and return your return type   
 
 
 3. call Run. For example
@@ -54,6 +51,9 @@ greeter.SayHello(request, your callback function);
 ```
 the callback function definition: arg: your return type. return: void
 
+
+## none C++11 
+see example: wrapper_example.cpp
 ## support
 now only support async unary call. Will add more if anyone need it. 
 Email me : savagecm@qq.com
