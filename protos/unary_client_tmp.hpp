@@ -22,10 +22,14 @@ class %service%Client
         __LOG(warn, "dtor of %service%Client is called");        
     }
     %repeat_start%
-    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%))
+    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%), std::string header_meta = "")
     {
         RpcCallData<%return_type%> *call = new RpcCallData<%return_type%>();
         call->set_meta_data((void*)(cb));
+        if(!header_meta.empty())
+        {
+            call->set_header_meta_data(header_meta);
+        }
         call->response_reader = stub_->Async%function_name%(&call->context, request, &cq_);
         call->response_reader->Finish(&call->reply, &call->status, (void *)call);           
     }
@@ -101,12 +105,17 @@ class %service%Client
     {
         public:
         typedef void(*user_callback_func)(Reply reply);
+        std::string header_meta;
         Reply reply;
         ::grpc::ClientContext context;
         std::unique_ptr<::grpc::ClientAsyncResponseReader<Reply>> response_reader;
         void set_meta_data(void* data) override
         {
             _usr_func=((user_callback_func) data);
+        }
+        void set_header_meta_data(std::string header_meta_in)
+        {
+            header_meta = header_meta_in;
         }
         void process()
         {

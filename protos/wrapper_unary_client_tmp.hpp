@@ -7,7 +7,7 @@ class %service%ClientWrapper
   public:
     ~%service%ClientWrapper();
     %repeat_start%
-    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%));
+    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%), char* header_meta = NULL);
     %repeat_end%
     void init(char* ipPort, int secureType = 0);
 };

@@ -12,6 +12,7 @@ MESSAGE(STATUS "Library installation directory: " ${CMAKE_INSTALL_LIBDIR})
 # header files.
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include/gen_target)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/protos/gen)
 # Collect all source files.
 file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp *.c *.cc)
 
@@ -39,7 +40,7 @@ INSTALL(
 
 # Install header files to /usr/local/include/${PROJECT_NAME}
 INSTALL(
-		DIRECTORY ${PROJECT_SOURCE_DIR}/include/
+		DIRECTORY ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/protos/gen/
 		DESTINATION include/${PROJECT_NAME}
 )
 
