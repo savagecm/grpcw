@@ -22,13 +22,21 @@ class %service%Client
         __LOG(warn, "dtor of %service%Client is called");        
     }
     %repeat_start%
-    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%), std::string header_meta = "")
+    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%))
     {
         RpcCallData<%return_type%> *call = new RpcCallData<%return_type%>();
         call->set_meta_data((void*)(cb));
-        if(!header_meta.empty())
+
+        call->response_reader = stub_->Async%function_name%(&call->context, request, &cq_);
+        call->response_reader->Finish(&call->reply, &call->status, (void *)call);           
+    }
+    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%), std::map<std::string, std::string>& header_meta)
+    {
+        RpcCallData<%return_type%> *call = new RpcCallData<%return_type%>();
+        call->set_meta_data((void*)(cb));
+        for(auto metaPair : header_meta)
         {
-            call->set_header_meta_data(header_meta);
+            call->set_header_meta_data(metaPair.first, metaPair.second);
         }
         call->response_reader = stub_->Async%function_name%(&call->context, request, &cq_);
         call->response_reader->Finish(&call->reply, &call->status, (void *)call);           
@@ -113,9 +121,9 @@ class %service%Client
         {
             _usr_func=((user_callback_func) data);
         }
-        void set_header_meta_data(std::string header_meta_in)
+        void set_header_meta_data(std::string key, std::string value)
         {
-            header_meta = header_meta_in;
+            context.AddMetadata(key, value);
         }
         void process()
         {
