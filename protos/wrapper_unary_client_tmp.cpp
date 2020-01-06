@@ -31,11 +31,20 @@ void %service%ClientWrapper::init(char* ipPort, int secureType)
 }
 
 %repeat_start%
-void %service%ClientWrapper::%function_name%(%function_argument_type% const & request, void(*cb)(%return_type%))
+void %service%ClientWrapper::%function_name%(%function_argument_type% const & request, void(*cb)(%return_type%), char* header_meta)
 {
     if(%service%ClientWrapper_uptr)
     {
-        %service%ClientWrapper_uptr->%function_name%(request, cb);
+        if(!header_meta)
+        {
+            %service%ClientWrapper_uptr->%function_name%(request, cb);
+        }
+        else
+        {
+            std::string hd_meta(header_meta);
+            %service%ClientWrapper_uptr->%function_name%(request, cb, hd_meta);
+        }
+        
     }
     else
     {
