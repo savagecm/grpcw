@@ -6,7 +6,11 @@ PROTOS_PATH="${PROJECT_SOURCE_DIR}/protos"
 gen_path="${PROJECT_SOURCE_DIR}"
 
 
-
+mkdir -p ${PROTOS_PATH}/gen
+mkdir -p ${PROJECT_SOURCE_DIR}/src/gen_target
+mkdir -p ${PROJECT_SOURCE_DIR}/include/gen_target
+mkdir -p ${PROJECT_SOURCE_DIR}/include/grpc
+mkdir -p ${PROJECT_SOURCE_DIR}/src/grpc
 for PROTOS in `find ${PROTOS_PATH} -name *.proto`
 do
     echo "process file : ${PROTOS}"
@@ -21,12 +25,14 @@ done
 
 for genfile in `find ${PROTOS_PATH}/gen -name *.cc`
 do 
-    cp ${genfile} ${PROJECT_SOURCE_DIR}/src/gen_target
+    
+    cp -r ${genfile} ${PROJECT_SOURCE_DIR}/src/gen_target/
 done
 
 for genfile in `find ${PROTOS_PATH}/gen -name *.h`
 do 
-    cp ${genfile} ${PROJECT_SOURCE_DIR}/include/gen_target
+    
+    cp -r ${genfile} ${PROJECT_SOURCE_DIR}/include/gen_target/
 done
 # gen code 
 
