@@ -1,6 +1,9 @@
 # grpc cpp wrapper
 
-
+# build status    
+## master branch [![Build Status](https://travis-ci.org/savagecm/grpcw.svg?branch=master)](https://travis-ci.org/savagecm/grpcw)
+      
+## dev branch [![Build Status](https://travis-ci.org/savagecm/grpcw.svg?branch=dev)](https://travis-ci.org/savagecm/grpcw)
 
 
 ## this project provide a wrapper of grpc for both c++98 and c++11 user    
