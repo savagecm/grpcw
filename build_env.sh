@@ -11,7 +11,7 @@ cd protobuf
 git checkout v3.5.2
 ./autogen.sh 
 ./configure 
-make -j
+make 
 #sudo make check 
 sudo make install 
 sudo ldconfig
@@ -21,5 +21,5 @@ git clone https://github.com/grpc/grpc.git
 cd grpc
 git checkout v1.10.0
 git submodule update --init
-make -j8
+make 
 sudo make install
