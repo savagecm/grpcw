@@ -19,6 +19,10 @@ void %service%Server::Run(std::string host, uint16_t port)
 }
 
 %repeat_start%
-std::function<%return_type%(%function_argument_type% const &)> %service%Server::_%function_name%_cb;
+std::function<void (%function_argument_type% const &, int index)> %service%Server::_%function_name%_cb;
 %repeat_end%
+
+std::map<int,void*> %service%Server::_affi_map;
+std::atomic<int> %service%Server::_unique_id;
+std::mutex %service%Server::mtx;
 %namespaces_end%

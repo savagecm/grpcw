@@ -7,14 +7,15 @@
 #include <atomic>
 #include <mutex> 
 %namespaces%
-   #define   send_reply(rsp,  index)\
-    {\
-        void * tmp_this = get_from_affi_map(index);\
-        if(tmp_this)\
-        {\
-            static_cast<CallData *>(tmp_this)->Finish(rsp);\
-        }\
-    }\
+#define %service%ServerReply(rsp, index)                              \
+    {                                                       \
+        void *tmp_this = %service%Server::get_from_affi_map(index);          \
+        if (tmp_this)                                       \
+        {                                                   \
+            static_cast<%service%Server::CallData *>(tmp_this)->Finish(rsp); \
+        }                                                   \
+    }
+
 class %service%Server final
 {
   public:
@@ -27,11 +28,12 @@ class %service%Server final
     struct CallData{
         virtual ~CallData(){};
         virtual void Proceed() = 0;
+        template<typename T> void Finish(T rsp){}
     };
     void Run(std::string host, uint16_t port);
 
     %repeat_start%
-    using %function_name%_cb = std::function<%return_type%(%function_argument_type% const &)>;
+    using %function_name%_cb = std::function<void (%function_argument_type% const &, int index)>;
     //typedef %return_type% (*%function_name%_cb)(%function_argument_type% const &)
 
     static void register_rpc_%function_name%(%function_name%_cb user_callback_fn)
@@ -57,8 +59,9 @@ class %service%Server final
             else if (status_ == PROCESS)
             {
                 new %function_name%CallData(service_, cq_);
-                
-                _%function_name%_cb(request_, get_unique_id());
+                int uid = get_unique_id();
+                set_affi_map(uid, this);
+                _%function_name%_cb(request_, uid);
                 //responder_.Finish(_%function_name%_cb(request_), ::grpc::Status::OK, this);
             }
             else
@@ -89,7 +92,7 @@ class %service%Server final
     };
     %repeat_end%   
 
-    static set_affi_map(int key, void* value){
+    static void set_affi_map(int key, void* value){
         std::lock_guard<std::mutex> lck (mtx);
         _affi_map[key] = value;
 
@@ -150,7 +153,7 @@ class %service%Server final
     uint16_t port;
     std::thread ServerThread_;
     static std::map<int,void*> _affi_map;
-    static atomic<int> _unique_id;
+    static std::atomic<int> _unique_id;
     static std::mutex mtx;
 };
 %namespaces_end%

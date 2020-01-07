@@ -40,7 +40,7 @@ void %service%ServerWrapper::register_rpc_%function_name%(%function_name%_cb use
 {
     if(%service%ServerWrapper_uptr)
     {
-        std::function<%return_type%(%function_argument_type% const &)> %function_name%_cb_11 = user_callback_fn;
+        std::function<void (%function_argument_type% const &, int index)> %function_name%_cb_11 = user_callback_fn;
         %service%ServerWrapper_uptr->register_rpc_%function_name%(%function_name%_cb_11);
     }
 }
