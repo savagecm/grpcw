@@ -4,7 +4,23 @@
 #include <grpcpp/grpcpp.h>
 #include "logger/logger.hpp"
 #include <thread>
+#include <atomic>
+#include <mutex> 
 %namespaces%
+#define %service%ServerReply(rsp, index)                              \
+    {                                                       \
+        void *tmp_this = %service%Server::get_from_affi_map(index);          \
+        if (tmp_this)                                       \
+        {                                                   \
+            __LOG(debug, "%service%Server call finish function , arg type is : " << typeid(rsp).name()); \
+            static_cast<%service%Server::CallData *>(tmp_this)->Finish(rsp); \
+        }                                                   \
+        else                                                \
+        {                                                   \
+            __LOG(debug, "did not find info with index : " << index);           \
+        }                                                   \
+    }
+
 class %service%Server final
 {
   public:
@@ -17,11 +33,14 @@ class %service%Server final
     struct CallData{
         virtual ~CallData(){};
         virtual void Proceed() = 0;
+        template<typename T> void Finish(T rsp){
+            __LOG(debug, "function not implement, arg type is : " << typeid(rsp).name());
+        }
     };
     void Run(std::string host, uint16_t port);
 
     %repeat_start%
-    using %function_name%_cb = std::function<%return_type%(%function_argument_type% const &)>;
+    using %function_name%_cb = std::function<void (%function_argument_type% const &, int index)>;
     //typedef %return_type% (*%function_name%_cb)(%function_argument_type% const &)
 
     static void register_rpc_%function_name%(%function_name%_cb user_callback_fn)
@@ -47,13 +66,22 @@ class %service%Server final
             else if (status_ == PROCESS)
             {
                 new %function_name%CallData(service_, cq_);
-                status_ = FINISH;
-                responder_.Finish(_%function_name%_cb(request_), ::grpc::Status::OK, this);
+                int uid = get_unique_id();
+                set_affi_map(uid, this);
+                _%function_name%_cb(request_, uid);
+                //responder_.Finish(_%function_name%_cb(request_), ::grpc::Status::OK, this);
             }
             else
             {
                 delete this;
             }
+        }
+
+        void Finish(%return_type% rsp)
+        {
+            __LOG(debug, "call finish function , arg type is : " << typeid(rsp).name());
+            status_ = FINISH;
+            responder_.Finish(rsp, ::grpc::Status::OK, this);
         }
       private:
         %service%::AsyncService *service_;
@@ -71,6 +99,28 @@ class %service%Server final
         CallStatus status_;
     };
     %repeat_end%   
+
+    static void set_affi_map(int key, void* value){
+        std::lock_guard<std::mutex> lck (mtx);
+        _affi_map[key] = value;
+
+    }
+    static void* get_from_affi_map(int key){
+        std::lock_guard<std::mutex> lck (mtx);
+        void *ret = NULL;
+        try
+        {
+            ret =  _affi_map.at(key);
+        }catch(...)
+        {
+            ret = NULL;
+        }
+        return ret;
+    }
+    static int get_unique_id()
+    {
+        return _unique_id++;
+    }
   private:
     void HandleRpcs()
     {
@@ -110,5 +160,8 @@ class %service%Server final
     std::string host;
     uint16_t port;
     std::thread ServerThread_;
+    static std::map<int,void*> _affi_map;
+    static std::atomic<int> _unique_id;
+    static std::mutex mtx;
 };
 %namespaces_end%

@@ -43,6 +43,8 @@ HelloReply serverFunction(HelloRequest const &request)
     std::string _reply_str = "Hello " + request.name();
     HelloReply _relpy;
     _relpy.set_message(_reply_str);
+
+    
     return _relpy;
 }
 
