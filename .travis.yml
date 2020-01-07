@@ -23,8 +23,11 @@ addons:
       - gcc-7
       - g++-7
       - libboost-all-dev
+    env:
+      - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
 before_install:
+- eval "${MATRIX_EVAL}"
 - chmod 755 build_env.sh
 - sudo ./build_env.sh
 - sudo ./autogen.sh
