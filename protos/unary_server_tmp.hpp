@@ -12,7 +12,12 @@
         void *tmp_this = %service%Server::get_from_affi_map(index);          \
         if (tmp_this)                                       \
         {                                                   \
+            __LOG(debug, "%service%Server call finish function , arg type is : " << typeid(rsp).name()); \
             static_cast<%service%Server::CallData *>(tmp_this)->Finish(rsp); \
+        }                                                   \
+        else                                                \
+        {                                                   \
+            __LOG(debug, "did not find info with index : " << index);           \
         }                                                   \
     }
 
@@ -28,7 +33,9 @@ class %service%Server final
     struct CallData{
         virtual ~CallData(){};
         virtual void Proceed() = 0;
-        template<typename T> void Finish(T rsp){}
+        template<typename T> void Finish(T rsp){
+            __LOG(debug, "function not implement, arg type is : " << typeid(rsp).name());
+        }
     };
     void Run(std::string host, uint16_t port);
 
@@ -72,6 +79,7 @@ class %service%Server final
 
         void Finish(%return_type% rsp)
         {
+            __LOG(debug, "call finish function , arg type is : " << typeid(rsp).name());
             status_ = FINISH;
             responder_.Finish(rsp, ::grpc::Status::OK, this);
         }

@@ -46,19 +46,19 @@ int main(int argc, char **argv)
             __LOG(debug, "[server][hello] receive request with name : " << request.name()<<" index test is : "<<index_test);
 
         });
-        server.Run("127.0.0.1", 2222);
+        server.Run("127.0.0.1", 2223);
 
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
-        GreeterClient greeter(grpc::CreateChannel("127.0.0.1:2222", grpc::InsecureChannelCredentials()));
+        GreeterClient greeter(grpc::CreateChannel("127.0.0.1:2223", grpc::InsecureChannelCredentials()));
         greeter.init();
-       
+       for(int i = 1; i < 10 ; i ++){
             HelloRequest request;
             request.set_name("this is a request  --> ");
             greeter.SayHello(request, [](HelloReply reply) {
                 __LOG(debug, "[hello]got reply from server : " << reply.message());
             });
-        
+       }
         // give the program some time to run before delete client and server
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
