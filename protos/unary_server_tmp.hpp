@@ -4,7 +4,17 @@
 #include <grpcpp/grpcpp.h>
 #include "logger/logger.hpp"
 #include <thread>
+#include <atomic>
+#include <mutex> 
 %namespaces%
+   #define   send_reply(rsp,  index)\
+    {\
+        void * tmp_this = get_from_affi_map(index);\
+        if(tmp_this)\
+        {\
+            static_cast<CallData *>(tmp_this)->Finish(rsp);\
+        }\
+    }\
 class %service%Server final
 {
   public:
@@ -47,13 +57,20 @@ class %service%Server final
             else if (status_ == PROCESS)
             {
                 new %function_name%CallData(service_, cq_);
-                status_ = FINISH;
-                responder_.Finish(_%function_name%_cb(request_), ::grpc::Status::OK, this);
+                
+                _%function_name%_cb(request_, get_unique_id());
+                //responder_.Finish(_%function_name%_cb(request_), ::grpc::Status::OK, this);
             }
             else
             {
                 delete this;
             }
+        }
+
+        void Finish(%return_type% rsp)
+        {
+            status_ = FINISH;
+            responder_.Finish(rsp, ::grpc::Status::OK, this);
         }
       private:
         %service%::AsyncService *service_;
@@ -71,6 +88,28 @@ class %service%Server final
         CallStatus status_;
     };
     %repeat_end%   
+
+    static set_affi_map(int key, void* value){
+        std::lock_guard<std::mutex> lck (mtx);
+        _affi_map[key] = value;
+
+    }
+    static void* get_from_affi_map(int key){
+        std::lock_guard<std::mutex> lck (mtx);
+        void *ret = NULL;
+        try
+        {
+            ret =  _affi_map.at(key);
+        }catch(...)
+        {
+            ret = NULL;
+        }
+        return ret;
+    }
+    static int get_unique_id()
+    {
+        return _unique_id++;
+    }
   private:
     void HandleRpcs()
     {
@@ -110,5 +149,8 @@ class %service%Server final
     std::string host;
     uint16_t port;
     std::thread ServerThread_;
+    static std::map<int,void*> _affi_map;
+    static atomic<int> _unique_id;
+    static std::mutex mtx;
 };
 %namespaces_end%
