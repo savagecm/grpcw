@@ -29,7 +29,7 @@ SET_TARGET_PROPERTIES(
 )
 
 LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/lib)
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} grpc++_unsecure boost_system protobuf grpc)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} grpc++_unsecure protobuf grpc)
 
 # Install to /usr/local/lib by default
 INSTALL(
