@@ -33,9 +33,11 @@ class %service%Server final
     struct CallData{
         virtual ~CallData(){};
         virtual void Proceed() = 0;
-        template<typename T> void Finish(T rsp){
+        %set_repeat_start%
+        virtual void Finish(%return_type% rsp){
             __LOG(debug, "function not implement, arg type is : " << typeid(rsp).name());
         }
+        %set_repeat_end%  
     };
     void Run(std::string host, uint16_t port);
 
@@ -98,8 +100,8 @@ class %service%Server final
         };
         CallStatus status_;
     };
-    %repeat_end%   
-
+   
+%repeat_end%
     static void set_affi_map(int key, void* value){
         std::lock_guard<std::mutex> lck (mtx);
         _affi_map[key] = value;

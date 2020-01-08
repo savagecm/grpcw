@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
         GreeterClient greeter(grpc::CreateChannel("127.0.0.1:2223", grpc::InsecureChannelCredentials()));
         greeter.init();
-        for (int i = 1; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             HelloRequest request;
             request.set_name("this is a request  --> ");
@@ -65,7 +65,10 @@ int main(int argc, char **argv)
         std::string _reply_str = "HelloAgain ";
         HelloReply _relpy;
         _relpy.set_message(_reply_str);
-        GreeterServerReply(_relpy, index_test);
+        for (int i = 0; i < 10; i++)
+        {
+            GreeterServerReply(_relpy, i);
+        }
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     __LOG(error, "example exit now!");

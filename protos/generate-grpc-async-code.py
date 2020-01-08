@@ -34,7 +34,9 @@ def generate_file(file_handler, template):
         if re.search("%repeat_start%", line):
             repeat = True
             continue
-
+        if re.search("%set_repeat_start%", line):
+            repeat = True
+            continue
         if re.search("%stream_req_repeat_start%", line):
             stream_req_repeat = True
             continue
@@ -44,9 +46,24 @@ def generate_file(file_handler, template):
         if re.search("%stream_req_resp_repeat_start%", line):
             stream_req_resp_repeat = True
             continue
-
+        if re.search("%set_repeat_end%", line):
+            lines = ""
+            set_repeat = set()
+            for rpc in rpcs:
+                set_repeat.add(rpc["%return_type%"])
+            for ret_repeat in set_repeat:
+                lines += replace(line_buffer, {"%return_type%": ret_repeat})
+            file_handler.write(lines)
+            line_buffer = ""
+            repeat = False
+            stream_req_repeat = False
+            stream_resp_repeat = False
+            stream_req_resp_repeat = False
+            continue
+            
         if re.search("%repeat_end%", line):
             lines = ""
+
             for rpc in rpcs:
                 #            rpc = {"%function_name%": "", "%function_argument_type%": "", "streamed_function_argument_type": False, "%return_type%": "", "streamed_return_type": False}
                 if repeat and not rpc[
