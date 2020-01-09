@@ -28,7 +28,7 @@ ENDIF()
 
 set(CXX_FLAGS "-std=c++11 -fPIC")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CCXX_FLAGS} -march=native")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CCXX_FLAGS} ")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CCXX_FLAGS} ${CXX_FLAGS}")
 
 MESSAGE(STATUS "Project : " ${PROJECT_NAME})
@@ -45,9 +45,9 @@ message(STATUS "Using protobuf ${protobuf_VERSION}")
 
 
 ADD_SUBDIRECTORY(src)
-IF(ENABLE_TEST)
+
     ADD_SUBDIRECTORY(tests)
-ENDIF()
+
     ADD_SUBDIRECTORY(examples)
 
 SEPARATE_ARGUMENTS(CMD_ARGS)

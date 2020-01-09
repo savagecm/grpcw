@@ -10,7 +10,7 @@ compiler:
   - gcc
 
 cache: ccache
-
+sudo: required
 os:
   - linux
 
@@ -23,10 +23,21 @@ addons:
       - gcc-7
       - g++-7
       - libboost-all-dev
+      sonarcloud:
+        organization: "savagecm" # the key of the org you chose at step #3
+        projectKey: "savagecm_grpcw"
+        project: "grpcw"
+    
+        token:
+          secure: "SX0fu0cUsYX9heuSwvK1eYQJParx+siobz1UmPJgbCZn7hKMICR0fC3M4kfZTErEeS93VCmLhhh8LaN6B5ba44zR7DCvoxDreVTSXjL5eSQYa4L0/6+N4PxCWK8vfFRtA7AQZ8WmwsQLr6A15nQ/4M9PZQ3H1+E552R7pseIOrjvNczY6rm0+s5BeswnrAVkKnJ0tQvTzBsDgTn9EHohCXNvZP/Jk2qB8b0+bDmdvMJ5i/ek48FM533OC5QdvZW9rFIqRXcCCTpq+873uYbzkwAV0JjUIzkWZDpwljdu71cU/3FeS2+IZFuMTw6vsew0Zsj5wqeJwnYhiTthqAy0S2V/wU/byVz9EYwJNUpJyzwLGpiuYiAijMs4LgQty1/2zmEWAFuBBSqadxQNzqyp7y3XWGAbyWDPI65TCQ+0t8o5bcHKBg9VhhXWGXYDLnaSzlcRj5G/ZH1g5C5o9N9MGUagjw68tPfmH8Q87uZZQFcR7+1+C2uq7WhvlmcsTK8h/DSpnY1eYCMh/JRsZo/gVNGHUFpvgAq0hCIZ3U00v6RWfg7s+NyHdGqTykNjc/CXfsLC7qsBfaRcp8dEhVfZMtvOcWY4iJBa7WjT4kDLKdNZ/yKyDHcV98sDtvNJqtiim0D1PXAp+44+vETjaRlFNwC111F3OvGjZqsIHVY+yO4="
+
+
+
     env:
       - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
 before_install:
+- export BASE_DIR=$PWD
 - eval "${MATRIX_EVAL}"
 - chmod 755 build_env.sh
 - sudo ./build_env.sh
@@ -34,5 +45,15 @@ before_install:
 install:
   
 
-script: mkdir -p build && cd build && cmake -DENABLE_TEST=ON .. && make && ./bin/example
-
+script: 
+- mkdir -p build && cd build && cmake -DENABLE_TEST=ON .. && make && ./bin/example
+- export LD_LIBRARY_PATH=/usr/local/lib
+- export GCOV_DIR=$PWD/build/tests/CMakeFiles/_tests.dir
+- git fetch --unshallow --quiet
+- mkdir -p build &&mkdir -p gcov&& cd build
+- cd $BASE_DIR/build&&rm -rf *&&cmake -DCODE_COVERAGE=ON  ..  &&build-wrapper-linux-x86-64 --out-dir ../bw-output &&make clean all&&bin/tests
+- cd $GCOV_DIR&& gcov -a test.cpp.gcno
+- cd $BASE_DIR&& sonar-scanner -Dsonar.projectKey=savagecm_grpcw -Dsonar.projectName=grpcw -Dsonar.projectVersion=1.0 -Dsonar.cfamily.build-wrapper-output=bw-output -Dsonar.sources=. -Dsonar.cfamily.gcov.reportsPath=$GCOV_DIR -Dsonar.coverage.exclusions=example/**/*,tst/**/*
+# -Dsonar.exclusions=example/**/*,tst/**/*
+- cd $BASE_DIR/build/bin&& ./example&&./example
+#- cd $BASE_DIR/build&& make memcheck
