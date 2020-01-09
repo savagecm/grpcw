@@ -5,6 +5,16 @@
       
 ## dev branch [![Build Status](https://travis-ci.org/savagecm/grpcw.svg?branch=dev)](https://travis-ci.org/savagecm/grpcw)
 
+## badges    
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=savagecm_grpcw&metric=ncloc)](https://sonarcloud.io/dashboard?id=savagecm_grpcw)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=savagecm_grpcw&metric=alert_status)](https://sonarcloud.io/dashboard?id=savagecm_grpcw)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=savagecm_grpcw&metric=code_smells)](https://sonarcloud.io/dashboard?id=savagecm_grpcw)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=savagecm_grpcw&metric=coverage)](https://sonarcloud.io/dashboard?id=savagecm_grpcw)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=savagecm_grpcw&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=savagecm_grpcw)
+
+
+
 
 ## this project provide a wrapper of grpc for both c++98 and c++11 user    
 the goal is to forget the grpc/protobuf detail infomation.
