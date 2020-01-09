@@ -36,7 +36,6 @@ do
 done
 # gen code 
 
-
 generate_proto_path="gen_target"
 out_header_path="${PROJECT_SOURCE_DIR}/include/grpc"
 out_src_path="${PROJECT_SOURCE_DIR}/src/grpc"
