@@ -32,7 +32,7 @@ static const char yellow[] = {0x1b, '[', '1', ';', '3', '3', 'm', 0};
 static const char blue[] = {0x1b, '[', '1', ';', '3', '4', 'm', 0};
 static const char normal[] = {0x1b, '[', '0', ';', '3', '9', 'm', 0};
 
-std::unique_ptr<logger_iface> active_logger(new logger(logger_iface::log_level::error)); //nullptr;
+std::unique_ptr<logger_iface> active_logger(new logger(logger_iface::log_level::error)); 
 
 logger::logger(logger_iface::log_level level)
     : m_level(level)

@@ -31,7 +31,7 @@ void %service%ClientWrapper::init(char* ipPort, int secureType)
 }
 
 %repeat_start%
-void %service%ClientWrapper::%function_name%(%function_argument_type% const & request, void(*cb)(%return_type%))
+void %service%ClientWrapper::%function_name%(%function_argument_type% const & request, void(*cb)(const %return_type% &))
 {
     if(%service%ClientWrapper_uptr)
     {
@@ -42,7 +42,7 @@ void %service%ClientWrapper::%function_name%(%function_argument_type% const & re
         /* error log */
     }       
 }
-void %service%ClientWrapper::%function_name%(%function_argument_type% const & request, void(*cb)(%return_type%), std::map<std::string, std::string>& header_meta)
+void %service%ClientWrapper::%function_name%(%function_argument_type% const & request, void(*cb)(const %return_type% &), std::map<std::string, std::string>& header_meta)
 {
     if(%service%ClientWrapper_uptr)
     {

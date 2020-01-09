@@ -22,7 +22,7 @@ class %service%Client
         __LOG(warn, "dtor of %service%Client is called");        
     }
     %repeat_start%
-    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%))
+    void %function_name%(%function_argument_type% const & request, void(*cb)(const %return_type% &))
     {
         RpcCallData<%return_type%> *call = new RpcCallData<%return_type%>();
         call->set_meta_data((void*)(cb));
@@ -30,7 +30,7 @@ class %service%Client
         call->response_reader = stub_->Async%function_name%(&call->context, request, &cq_);
         call->response_reader->Finish(&call->reply, &call->status, (void *)call);           
     }
-    void %function_name%(%function_argument_type% const & request, void(*cb)(%return_type%), std::map<std::string, std::string>& header_meta)
+    void %function_name%(%function_argument_type% const & request, void(*cb)(const %return_type% &), std::map<std::string, std::string>& header_meta)
     {
         RpcCallData<%return_type%> *call = new RpcCallData<%return_type%>();
         call->set_meta_data((void*)(cb));
