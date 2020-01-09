@@ -35,7 +35,7 @@ class %service%Server final
         virtual void Proceed() = 0;
         %set_repeat_start%
         virtual void Finish(%return_type% rsp){
-            __LOG(debug, "function not implement, arg type is : " << typeid(rsp).name());
+            __LOG(warn, "function not implement, arg type is : " << typeid(rsp).name());
         }
         %set_repeat_end%  
     };
@@ -115,6 +115,7 @@ class %service%Server final
             ret =  _affi_map.at(key);
         }catch(...)
         {
+            __LOG(warn, "did not find info with index : " << key); 
             ret = NULL;
         }
         return ret;
