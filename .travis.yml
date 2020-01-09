@@ -42,7 +42,7 @@ install:
 script: 
 - mkdir -p build && cd build && cmake -DENABLE_TEST=ON .. && make && ./bin/example
 - export LD_LIBRARY_PATH=/usr/local/lib
-- export GCOV_DIR=$PWD/build/tests/CMakeFiles/_tests.dir
+- export GCOV_DIR=$BASE_DIR/build/tests/CMakeFiles/_tests.dir
 - mkdir -p build &&mkdir -p gcov&& cd build
 - cd $BASE_DIR/build&&rm -rf *&&cmake -DENABLE_TEST=ON  ..  &&build-wrapper-linux-x86-64 --out-dir ../bw-output make clean all&&bin/tests
 - cd $GCOV_DIR&& gcov -a test.cpp.gcno
