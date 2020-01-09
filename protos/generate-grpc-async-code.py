@@ -65,7 +65,6 @@ def generate_file(file_handler, template):
             lines = ""
 
             for rpc in rpcs:
-                #            rpc = {"%function_name%": "", "%function_argument_type%": "", "streamed_function_argument_type": False, "%return_type%": "", "streamed_return_type": False}
                 if repeat and not rpc[
                         "streamed_function_argument_type"] and not rpc[
                             "streamed_return_type"]:
