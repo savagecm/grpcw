@@ -3,6 +3,7 @@
 
 %namespaces%
 
+
 class %service%ServerWrapper
 {
   public:
@@ -13,5 +14,9 @@ class %service%ServerWrapper
     void register_rpc_%function_name%(%function_name%_cb user_callback_fn);
     %repeat_end%
     void Run(char* host, uint16_t port);
+
+%set_repeat_start%
+    static bool reply(%return_type% rsp, int index);
+%set_repeat_end%
 };
 %namespaces_end%

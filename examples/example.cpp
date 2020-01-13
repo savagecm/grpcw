@@ -67,7 +67,7 @@ int main()
     _relpy.set_message(_reply_str);
     for (int i = 0; i < 10; i++)
     {
-        GreeterServerReply(_relpy, i);
+        GreeterServer::reply(_relpy, i);
     }
     std::this_thread::sleep_for(std::chrono::seconds(1));
 

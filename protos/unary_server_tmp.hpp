@@ -7,19 +7,7 @@
 #include <atomic>
 #include <mutex> 
 %namespaces%
-#define %service%ServerReply(rsp, index)                              \
-    {                                                       \
-        void *tmp_this = %service%Server::get_from_affi_map(index);          \
-        if (tmp_this)                                       \
-        {                                                   \
-            __LOG(debug, "%service%Server call finish function , arg type is : " << typeid(rsp).name()); \
-            static_cast<%service%Server::CallData *>(tmp_this)->Finish(rsp); \
-        }                                                   \
-        else                                                \
-        {                                                   \
-            __LOG(debug, "did not find info with index : " << index);           \
-        }                                                   \
-    }
+
 
 class %service%Server final
 {
@@ -40,7 +28,24 @@ class %service%Server final
         %set_repeat_end%  
     };
     void Run(std::string host, uint16_t port);
-
+   
+%set_repeat_start%
+    static bool reply(%return_type% rsp, int index)                              
+    {                                                       
+        void *tmp_this = %service%Server::get_from_affi_map(index);          
+        if (tmp_this)                                       
+        {                                                   
+            __LOG(debug, " call finish function , arg type is : " << typeid(rsp).name());
+            static_cast<%service%Server::CallData *>(tmp_this)->Finish(rsp); 
+            return true;
+        }                                                   
+        else                                                
+        {                                                   
+            __LOG(debug, "did not find info with index : " << index);           
+            return false;
+        }                                                   
+    }
+%set_repeat_end%  
     %repeat_start%
     using %function_name%_cb = std::function<void (%function_argument_type% const &, int index)>;
     //typedef %return_type% (*%function_name%_cb)(%function_argument_type% const &)
