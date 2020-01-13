@@ -45,4 +45,13 @@ void %service%ServerWrapper::register_rpc_%function_name%(%function_name%_cb use
     }
 }
 %repeat_end%
+
+%set_repeat_start%
+bool %service%ServerWrapper::reply(%return_type% rsp, int index)
+{
+
+    return %service%Server::reply(rsp, index);      
+     
+}
+%set_repeat_end%
 %namespaces_end%

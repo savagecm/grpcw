@@ -52,7 +52,7 @@ def generate_file(file_handler, template):
             for rpc in rpcs:
                 set_repeat.add(rpc["%return_type%"])
             for ret_repeat in set_repeat:
-                lines += replace(line_buffer, {"%return_type%": ret_repeat})
+                lines += replace(line_buffer, {"%return_type%": ret_repeat, "%service%":single_replace["%service%"]})
             file_handler.write(lines)
             line_buffer = ""
             repeat = False

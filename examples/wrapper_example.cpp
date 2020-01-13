@@ -33,19 +33,15 @@
 
 using namespace helloworld;
 
-void clientFunction(HelloReply reply)
+void clientFunction(HelloReply const & reply)
 {
     std::cout << "got reply from server : " << reply.message() << std::endl;
 }
-HelloReply serverFunction(HelloRequest const &request)
+void  serverFunction(HelloRequest const &request, int index)
 {
     std::cout << "receive request with name : " << request.name() << std::endl;
-    std::string _reply_str = "Hello " + request.name();
-    HelloReply _relpy;
-    _relpy.set_message(_reply_str);
 
-    
-    return _relpy;
+    return;
 }
 
 int main(int argc, char **argv)
@@ -68,6 +64,15 @@ int main(int argc, char **argv)
         request.set_name("this is a request  --> ");
         greeter.SayHello(request, clientFunction);
     }
+    sleep(1);
+    for (int i = 0; i < 10; i++)
+    {
+        std::string _reply_str = "Hello " + i;
+        HelloReply _relpy;
+        _relpy.set_message(_reply_str);
+        GreeterServerWrapper::reply(_relpy, i);
+    }
+
     sleep(2);
     std::cout << "exit example" << std::endl;
     return 0;
